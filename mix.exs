@@ -10,7 +10,7 @@ defmodule RedisPool.MixProject do
   def project do
     [
       app: :redis_pool,
-      version: "0.1.0",
+      version: @version,
       elixir: "~> 1.15",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
