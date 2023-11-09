@@ -2,14 +2,14 @@ defmodule RedisPool.MixProject do
   @moduledoc false
   use Mix.Project
 
-  @name "redis_pool"
+  @name "redis_pool_xyz"
   @version "0.1.0"
   @repo_url "https://github.com/tt67wq/redis_pool"
   @description "A pool wrapper for redix using NimblePool"
 
   def project do
     [
-      app: :redis_pool,
+      app: :redis_pool_xyz,
       version: @version,
       elixir: "~> 1.15",
       start_permanent: Mix.env() == :prod,

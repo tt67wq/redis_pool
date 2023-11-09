@@ -4,16 +4,15 @@ A module that provides a Redis connection pool using NimblePool.
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `redis_pool` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
   [
-    {:redis_pool, "~> 0.1.0"}
+    {:redis_pool_xyz, "~> 0.1.0"}
   ]
 end
 ```
+See [DOC](https://hexdocs.pm/redis_pool_xyz/0.1.0)
 
 ## Usage
 To use `RedisPool`, you can start the pool with `RedisPool.start_link/1` function. The function accepts a keyword list of options, including `url`, `pool_size`, and `name`.
