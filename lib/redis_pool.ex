@@ -51,13 +51,12 @@ defmodule RedisPool do
   def start_link(opts) do
     opts = NimbleOptions.validate!(opts, @pool_opts_schema)
 
-    [
+    NimblePool.start_link(
       worker: {__MODULE__, opts[:url]},
       pool_size: opts[:pool_size],
       worker_idle_timeout: 10_000,
       name: opts[:name]
-    ]
-    |> NimblePool.start_link()
+    )
   end
 
   @spec stop(pid() | atom()) :: :ok
@@ -121,7 +120,7 @@ defmodule RedisPool do
 
   @impl NimblePool
   @spec init_worker(String.t()) :: {:ok, pid, any}
-  def init_worker(redis_url = pool_state) do
+  def init_worker(pool_state = redis_url) do
     {:ok, conn} = Redix.start_link(redis_url)
     {:ok, conn, pool_state}
   end
@@ -142,7 +141,8 @@ defmodule RedisPool do
 
   @impl NimblePool
   def handle_ping(conn, _pool_state) do
-    Redix.command(conn, ["PING"])
+    conn
+    |> Redix.command(["PING"])
     |> case do
       {:ok, "PONG"} -> {:ok, conn}
       _ -> {:remove, :closed}
