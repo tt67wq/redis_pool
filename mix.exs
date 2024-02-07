@@ -33,7 +33,7 @@ defmodule RedisPool.MixProject do
     [
       {:redix, "~> 1.3"},
       {:nimble_pool, "~> 0.2"},
-      {:nimble_options, "~> 1.0"},
+      {:nimble_options, "~> 1.1"},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.31", only: :dev, runtime: false},
       {:styler, "~> 0.11", only: [:dev, :test], runtime: false},
