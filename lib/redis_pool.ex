@@ -33,6 +33,7 @@ defmodule RedisPool do
   ]
 
   @type pool_opts_t :: keyword(unquote(NimbleOptions.option_typespec(@pool_opts_schema)))
+  @type command_t :: [binary()]
 
   def child_spec(opts) do
     name = Keyword.fetch!(opts, :name)
@@ -72,7 +73,7 @@ defmodule RedisPool do
       iex> RedisPool.command(pool, ["SET", "foo", "bar"])
       {:ok, "OK"}
   """
-  @spec command(pid() | atom(), Typespecs.command_t(), keyword()) ::
+  @spec command(pid() | atom(), command_t(), keyword()) ::
           {:ok, term()} | {:error, term()}
   def command(name, command, opts \\ [])
 
@@ -99,7 +100,7 @@ defmodule RedisPool do
       iex> RedisPool.pipeline(pool, [["SET", "foo", "bar"], ["SET", "bar", "foo"]])
       {:ok, ["OK", "OK"]]}
   """
-  @spec pipeline(pid() | atom(), [Typespecs.command_t()], keyword()) ::
+  @spec pipeline(pid() | atom(), [command_t()], keyword()) ::
           {:ok, term()} | {:error, term()}
   def pipeline(name, commands, opts \\ [])
 
