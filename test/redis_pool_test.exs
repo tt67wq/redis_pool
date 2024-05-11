@@ -2,23 +2,22 @@ defmodule RedisPoolTest do
   @moduledoc false
   use ExUnit.Case
   # doctest RedisPool
+  alias RedisPool.Test.App
 
   setup do
-    url =
-      "tmp/url"
-      |> File.read!()
-      |> String.trim()
+    url = "redis://localhost:6379"
+    config = [name: :redis_test, url: url]
 
-    start_supervised!({RedisPool, name: :test, url: url})
+    Application.put_env(:app, RedisPool.Test.App, config)
 
-    [name: :test]
+    start_supervised!(App)
+
+    [name: :redis_test]
   end
 
-  test "get", %{name: name} do
-    assert RedisPool.command(name, ["GET", "foo"]) == {:ok, nil}
-  end
-
-  test "set", %{name: name} do
-    assert RedisPool.command(name, ["SET", "foo", "bar"]) == {:ok, "OK"}
+  test "main", %{name: name} do
+    assert App.command(name, ["GET", "foo"]) == {:ok, nil}
+    assert App.command(name, ["SET", "foo", "bar"]) == {:ok, "OK"}
+    assert App.command(name, ["GET", "foo"]) == {:ok, "bar"}
   end
 end

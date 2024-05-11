@@ -1,3 +1,4 @@
+<!-- MDOC !-->
 # RedisPool
 
 A module that provides a Redis connection pool using NimblePool.
@@ -8,25 +9,43 @@ A module that provides a Redis connection pool using NimblePool.
 ```elixir
 def deps do
   [
-    {:redis_pool_xyz, "~> 0.1.0"}
+    {:redis_pool_xyz, "~> 0.1"}
   ]
 end
 ```
-See [DOC](https://hexdocs.pm/redis_pool_xyz/0.1.0)
+See [DOC](https://hexdocs.pm/redis_pool_xyz)
 
 ## Usage
-To use `RedisPool`, you can start the pool with `RedisPool.start_link/1` function. The function accepts a keyword list of options, including `url`, `pool_size`, and `name`.
-  
-```elixir
-{:ok, _pid} = RedisPool.start_link(url: "redis://localhost:6379", pool_size: 10, name: :redis_pool)
 
-# SET
-RedisPool.command(:redis_pool, ["SET", "key", "value"])
+1. Add a module using `RedisPool`:
+   ```Elixir
+   defmodule MyRedis do
+     @moduledoc false
 
-# GET
-RedisPool.command(:redis_pool, ["GET", "key"])
+     use RedisPool, otp_app: :my_app
 
-# pipeline
-RedisPool.pipeline(:redis_pool, ["SET", "key1", "value1"], ["SET", "key2", "value2"])
-```
+   end
+   ```
 
+2. Configure your Redis:
+    ```Elixir
+    url = "redis://localhost:6379"
+    config = [name: :my_redis, url: url]
+    config :my_app, MyRedis, config
+    ```
+
+3. Add your redis module to supervisor:
+   ```Elixir
+   children = [
+      MyRedis
+   ]
+   ```
+
+4. Enjoy your journey!
+   ```Elixir
+   MyRedis.command(:my_redis, ["GET", "foo"]) == {:ok, nil}
+   MyRedis.command(:my_redis, ["SET", "foo", "bar"]) == {:ok, "OK"}
+   MyRedis.command(:my_redis, ["GET", "foo"]) == {:ok, "bar"}
+
+   MyReids.pipeline(:my_redis, [["SET", "foo1", "bar1"], ["SET", "foo2", "bar2"]])
+   ```
