@@ -6,18 +6,20 @@ defmodule RedisPoolTest do
 
   setup do
     url = "redis://localhost:6379"
-    config = [name: :redis_test, url: url]
+    config = [url: url]
 
     Application.put_env(:app, RedisPool.Test.App, config)
 
     start_supervised!(App)
 
-    [name: :redis_test]
+    %{}
   end
 
-  test "main", %{name: name} do
-    assert App.command(name, ["GET", "foo"]) == {:ok, nil}
-    assert App.command(name, ["SET", "foo", "bar"]) == {:ok, "OK"}
-    assert App.command(name, ["GET", "foo"]) == {:ok, "bar"}
+  test "main" do
+    App.command(["DEL", "foo"])
+    assert App.command(["PING"]) == {:ok, "PONG"}
+    assert App.command(["GET", "foo"]) == {:ok, nil}
+    assert App.command(["SET", "foo", "bar"]) == {:ok, "OK"}
+    assert App.command(["GET", "foo"]) == {:ok, "bar"}
   end
 end

@@ -15,6 +15,8 @@ defmodule RedisPool do
 
       defoverridable init: 1
 
+      @name Module.concat(__MODULE__, Core)
+
       def child_spec(opts) do
         %{
           id: __MODULE__,
@@ -30,12 +32,16 @@ defmodule RedisPool do
           |> Application.get_env(__MODULE__, config)
           |> init()
 
-        Core.start_link(cfg)
+        cfg
+        |> Keyword.put(:name, @name)
+        |> Core.start_link()
       end
 
-      defdelegate stop(pid), to: Core
-      defdelegate command(pid, command, opts \\ []), to: Core
-      defdelegate pipeline(pid, command, opts \\ []), to: Core
+      defp delegate(method, args), do: apply(Core, method, [@name | args])
+
+      def stop, do: delegate(:stop, [])
+      def command(command, opts \\ []), do: delegate(:command, [command, opts])
+      def pipeline(command, opts \\ []), do: delegate(:pipeline, [command, opts])
     end
   end
 end

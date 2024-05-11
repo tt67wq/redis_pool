@@ -30,7 +30,7 @@ See [DOC](https://hexdocs.pm/redis_pool_xyz)
 2. Configure your Redis:
     ```Elixir
     url = "redis://localhost:6379"
-    config = [name: :my_redis, url: url]
+    config = [url: url]
     config :my_app, MyRedis, config
     ```
 
@@ -43,9 +43,8 @@ See [DOC](https://hexdocs.pm/redis_pool_xyz)
 
 4. Enjoy your journey!
    ```Elixir
-   MyRedis.command(:my_redis, ["GET", "foo"]) == {:ok, nil}
-   MyRedis.command(:my_redis, ["SET", "foo", "bar"]) == {:ok, "OK"}
-   MyRedis.command(:my_redis, ["GET", "foo"]) == {:ok, "bar"}
-
-   MyReids.pipeline(:my_redis, [["SET", "foo1", "bar1"], ["SET", "foo2", "bar2"]])
+   MyRedis.command(["GET", "foo"]) == {:ok, nil}
+   MyRedis.command(["SET", "foo", "bar"]) == {:ok, "OK"}
+   MyRedis.command(["GET", "foo"]) == {:ok, "bar"}
+   MyReids.pipeline([["SET", "foo1", "bar1"], ["SET", "foo2", "bar2"]])
    ```
