@@ -10,7 +10,7 @@
 ```elixir
 def deps do
   [
-    {:redis_pool_xyz, "~> 0.2.3"}
+    {:redis_pool_xyz, "~> 0.3"}
   ]
 end
 ```
@@ -50,7 +50,7 @@ end
    children = [
      MyApp.Redis
    ]
-   
+
    Supervisor.start_link(children, strategy: :one_for_one)
    ```
 
@@ -60,10 +60,10 @@ end
    {:ok, nil} = MyApp.Redis.command(["GET", "foo"])
    {:ok, "OK"} = MyApp.Redis.command(["SET", "foo", "bar"])
    {:ok, "bar"} = MyApp.Redis.command(["GET", "foo"])
-   
+
    # 执行管道命令
    {:ok, ["OK", "OK"]} = MyApp.Redis.pipeline([
-     ["SET", "foo1", "bar1"], 
+     ["SET", "foo1", "bar1"],
      ["SET", "foo2", "bar2"]
    ])
    ```
@@ -77,16 +77,16 @@ end
 ```elixir
 defmodule MyApp.Redis do
   use RedisPool, otp_app: :my_app
-  
+
   @impl true
   def init(config) do
     # 添加默认配置
     config = Keyword.put_new(config, :pool_size, 5)
-    
+
     # 添加日志
     require Logger
     Logger.info("初始化 Redis 连接池: #{inspect(config)}")
-    
+
     # 验证配置
     if config[:url] do
       {:ok, config}
@@ -107,15 +107,15 @@ case MyApp.Redis.command(["GET", "key"]) do
   {:ok, value} ->
     # 处理成功的结果
     IO.puts("值: #{value || "nil"}")
-    
+
   {:error, %RedisPool.Error{code: :connection_error}} ->
     # 处理连接错误
     IO.puts("Redis 连接错误，请检查连接参数")
-    
+
   {:error, %RedisPool.Error{code: :timeout_error}} ->
     # 处理超时错误
     IO.puts("Redis 操作超时")
-    
+
   {:error, error} ->
     # 处理其他错误
     IO.puts("发生错误: #{inspect(error)}")
