@@ -3,7 +3,7 @@ defmodule RedisPool.MixProject do
   use Mix.Project
 
   @name "redis_pool_xyz"
-  @version "0.3.1"
+  @version "0.3.2"
   @repo_url "https://github.com/tt67wq/redis_pool"
   @description "A pool wrapper for redix using NimblePool"
 
