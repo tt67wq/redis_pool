@@ -8,7 +8,7 @@ defmodule RedisPool.Test.Integration.NetworkApp do
 
   def init(config) do
     # 可以在这里添加自定义配置处理逻辑
-    {:ok, config}
+    config
   end
 
   @doc """

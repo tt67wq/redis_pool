@@ -89,9 +89,9 @@ defmodule MyApp.Redis do
 
     # 验证配置
     if config[:url] do
-      {:ok, config}
+      config
     else
-      {:error, "Redis URL 未配置"}
+      raise "Redis URL 未配置"
     end
   end
 end

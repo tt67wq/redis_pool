@@ -92,7 +92,7 @@ defmodule RedisPool do
 
       返回 `{:ok, config}` 元组
       """
-      @spec init(RedisPool.config_t()) :: {:ok, RedisPool.config_t()} | {:error, RedisPool.Error.t()}
+      @spec init(RedisPool.config_t()) :: RedisPool.config_t()
       @doc """
       初始化连接池配置。
 
@@ -105,8 +105,7 @@ defmodule RedisPool do
 
       ## 返回值
 
-      - `{:ok, config}`: 配置有效，返回可能修改过的配置
-      - `{:error, error}`: 配置无效，返回错误信息
+      返回配置选项
 
       ## 示例
 
@@ -121,16 +120,16 @@ defmodule RedisPool do
 
           # 验证配置
           if config[:url] do
-            {:ok, config}
+            config
           else
-            {:error, "Redis URL 未配置"}
+            raise "Redis URL 未配置"
           end
         end
       end
       ```
       """
       def init(config) do
-        {:ok, config}
+        config
       end
 
       defoverridable init: 1
@@ -173,17 +172,13 @@ defmodule RedisPool do
       def start_link(config \\ []) do
         otp_app = unquote(opts[:otp_app])
 
-        case otp_app
-             |> Application.get_env(__MODULE__, config)
-             |> init() do
-          {:ok, cfg} ->
-            cfg
-            |> Keyword.put(:name, @name)
-            |> Core.start_link()
-
-          {:error, _} = error ->
-            error
-        end
+        cfg = otp_app
+              |> Application.get_env(__MODULE__, config)
+              |> init()
+        
+        cfg
+        |> Keyword.put(:name, @name)
+        |> Core.start_link()
       end
 
       @doc """
